@@ -6,17 +6,17 @@ const notFound = document.querySelector('.not-found');
 const input = document.querySelector('#textInput');
 
 search.addEventListener('click', () => {
-    const APY_KEY = "aa94ad38245df783938c3da44a3326cd";
+    const APY_KEY = "64c497e80f30b3b95ef679817472c269";
     const city = document.querySelector('.search-container input').value;
     if (city === '') {
         return;
     }
 
-    fetch(`http://api.weatherstack.com/current?access_key=${APY_KEY}&query=${city}`)
+    fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${APY_KEY}&units=metric`)
         .then(response => response.json())
         .then(json => {
             main.style.height = '550px';
-            if (json.error) {
+            if (json.cod === '404') {
                 weatherContainer.style.display = 'none';
                 weatherDetails.style.display = 'none';
                 notFound.style.display = 'block';
@@ -33,45 +33,34 @@ search.addEventListener('click', () => {
             const humidity = document.querySelector('.weather-details .humidity p');
             const wind = document.querySelector('.weather-details .wind p');
 
-            switch (json.current.weather_descriptions[0]) {
-                case 'Sunny':
+            switch (json.weather[0].main) {
+                case 'Clear':
                     image.src = 'img/sunny.svg';
                     break;
-                case 'Rain':
-                case 'Light Rain':
-                case 'Light Rain, Mist':
-                    image.src = 'img/rainy.svg';
+                case 'Clouds':
+                    image.src = 'img/cloudy.svg';
                     break;
-                case 'Mist':
-                case 'Fog':
-                case 'Haze':
-                case 'Overcast':
+                case 'Atmosphere ':
                     image.src = 'img/fog.svg';
                     break;
-                case 'Partly cloudy':
-                case 'Clear':
-                    image.src = 'img/partly_cloudy.svg';
+                case 'Rain':
+                case 'Drizzle':
+                    image.src = 'img/rainy.svg';
                     break;
                 case 'Snow':
-                case 'Light Snow':
-                case 'Light Snow, Mist':
-                case 'Blizzard':
-                case 'Light Rain And Snow':
-                case 'Light Freezing Drizzle':
-                case 'Light Freezing Drizzle, Light Snow':
                     image.src = 'img/snowy.svg';
                     break;
-                case 'Ice Crystals':
-                    image.src = 'img/freezing.svg';
+                case 'Thunderstorm':
+                    image.src = 'img/stormy.svg';
                     break;
                 default:
-                    image.src = 'img/cloudy.svg';
+                    image.src = 'img/partly_cloudy.svg';
             }
 
-            temperature.innerHTML = `${parseInt(json.current.temperature)}<span>ºC</span>`;
-            description.innerHTML = `${json.current.weather_descriptions}`;
-            humidity.innerHTML = `${json.current.humidity}%`;
-            wind.innerHTML = `${parseInt(json.current.wind_speed)} Km/h`;
+            temperature.innerHTML = `${parseInt(json.main.temp)}<span>ºC</span>`;
+            description.innerHTML = `${json.weather[0].description}`;
+            humidity.innerHTML = `${json.main.humidity}%`;
+            wind.innerHTML = `${parseInt(json.wind.speed)} Km/h`;
 
             weatherContainer.style.display = '';
             weatherDetails.style.display = '';
