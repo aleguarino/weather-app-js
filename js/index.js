@@ -1,3 +1,6 @@
+import { APY_KEY } from "./config.js";
+
+
 const main = document.querySelector('main');
 const search = document.querySelector('.search-container button');
 const weatherContainer = document.querySelector('.weather-container');
@@ -6,7 +9,6 @@ const notFound = document.querySelector('.not-found');
 const input = document.querySelector('#textInput');
 
 search.addEventListener('click', () => {
-    const APY_KEY = "64c497e80f30b3b95ef679817472c269";
     const city = document.querySelector('.search-container input').value;
     if (city === '') {
         return;
